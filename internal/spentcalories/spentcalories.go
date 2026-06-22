@@ -45,7 +45,7 @@ func meanSpeed(steps int, height float64, duration time.Duration) float64 {
 	if duration.Seconds() < 0 {
 		return 0
 	}
-	return float64(distance(steps, height)) / duration.Hours()
+	return distance(steps, height) / duration.Hours()
 }
 
 func TrainingInfo(data string, weight, height float64) (string, error) {
@@ -62,9 +62,9 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 
 	switch types {
 	case "Бег":
-		callories, err := RunningSpentCalories(step, weight, height, duration)
-		if err != nil {
-			log.Println(err)
+		callories, errInner := RunningSpentCalories(step, weight, height, duration)
+		if errInner != nil {
+			log.Println(errInner)
 		}
 		return fmt.Sprintf("Тип тренировки: %s"+
 			"Длительность: %f ч."+
@@ -74,9 +74,9 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 			types, duration.Hours(), float64(distance(step, height)), avgSpeed, callories), nil
 
 	case "Хотьба":
-		callories, err := RunningSpentCalories(step, weight, height, duration)
-		if err != nil {
-			log.Println(err)
+		callories, errInner := RunningSpentCalories(step, weight, height, duration)
+		if errInner != nil {
+			log.Println(errInner)
 		}
 		return fmt.Sprintf("Тип тренировки: %s"+
 			"Длительность: %f ч."+
