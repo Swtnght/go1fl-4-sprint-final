@@ -28,9 +28,15 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 	if err != nil {
 		return 0, "", 0, err
 	}
+	if step <= 0 {
+		return 0, "", 0, errors.New("step must be greater than zero")
+	}
 	duration, err := time.ParseDuration(slay[2])
 	if err != nil {
 		return 0, "", 0, err
+	}
+	if duration <= 0 {
+		return 0, "", 0, errors.New("duration must be greater than zero")
 	}
 	return step, slay[1], duration, nil
 }
@@ -42,7 +48,7 @@ func distance(steps int, height float64) float64 {
 
 func meanSpeed(steps int, height float64, duration time.Duration) float64 {
 
-	if duration.Seconds() < 0 {
+	if duration.Seconds() <= 0 {
 		return 0
 	}
 	return distance(steps, height) / duration.Hours()
@@ -58,7 +64,7 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 	if err != nil {
 		log.Println(err)
 	}
-	avgSpeed := meanSpeed(step, weight, duration)
+	avgSpeed := meanSpeed(step, height, duration)
 
 	switch types {
 	case "Бег":
@@ -66,23 +72,23 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 		if errInner != nil {
 			log.Println(errInner)
 		}
-		return fmt.Sprintf("Тип тренировки: %s"+
-			"Длительность: %f ч."+
-			"Дистанция: %f км."+
-			"Скорость: %f км/ч"+
-			"Сожгли калорий: %f",
+		return fmt.Sprintf("Тип тренировки: %s\n"+
+			"Длительность: %.2f ч.\n"+
+			"Дистанция: %.2f км.\n"+
+			"Скорость: %.2f км/ч\n"+
+			"Сожгли калорий: %.2f\n",
 			types, duration.Hours(), float64(distance(step, height)), avgSpeed, callories), nil
 
-	case "Хотьба":
-		callories, errInner := RunningSpentCalories(step, weight, height, duration)
+	case "Ходьба":
+		callories, errInner := WalkingSpentCalories(step, weight, height, duration)
 		if errInner != nil {
 			log.Println(errInner)
 		}
-		return fmt.Sprintf("Тип тренировки: %s"+
-			"Длительность: %f ч."+
-			"Дистанция: %f км."+
-			"Скорость: %f км/ч"+
-			"Сожгли калорий: %f",
+		return fmt.Sprintf("Тип тренировки: %s\n"+
+			"Длительность: %.2f ч.\n"+
+			"Дистанция: %.2f км.\n"+
+			"Скорость: %.2f км/ч\n"+
+			"Сожгли калорий: %.2f\n",
 			slay[1], duration.Hours(), float64(distance(step, height)), avgSpeed, callories), nil
 	default:
 		return "", errors.New("неизвестный тип тренировки")
@@ -92,10 +98,10 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 
-	if steps < 1 {
+	if steps <= 0 {
 		return 0, errors.New("steps can't be less than 1")
 	}
-	if duration.Seconds() <= 0 {
+	if duration <= 0 {
 		return 0, errors.New("duration can't be less than 0")
 	}
 	if weight <= 0 {
@@ -115,7 +121,7 @@ func WalkingSpentCalories(steps int, weight, height float64, duration time.Durat
 	if steps < 1 {
 		return 0, errors.New("steps can't be less than 1")
 	}
-	if duration.Seconds() <= 0 {
+	if duration <= 0 {
 		return 0, errors.New("duration can't be less than 0")
 	}
 	if weight <= 0 {
