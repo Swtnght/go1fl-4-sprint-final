@@ -68,32 +68,24 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 
 	switch types {
 	case "Бег":
-		callories, errInner := RunningSpentCalories(step, weight, height, duration)
-		if errInner != nil {
-			log.Println(errInner)
-		}
-		return fmt.Sprintf("Тип тренировки: %s\n"+
-			"Длительность: %.2f ч.\n"+
-			"Дистанция: %.2f км.\n"+
-			"Скорость: %.2f км/ч\n"+
-			"Сожгли калорий: %.2f\n",
-			types, duration.Hours(), float64(distance(step, height)), avgSpeed, callories), nil
-
+		calories, err = RunningSpentCalories(step, weight, height, duration)
 	case "Ходьба":
-		callories, errInner := WalkingSpentCalories(step, weight, height, duration)
-		if errInner != nil {
-			log.Println(errInner)
-		}
-		return fmt.Sprintf("Тип тренировки: %s\n"+
-			"Длительность: %.2f ч.\n"+
-			"Дистанция: %.2f км.\n"+
-			"Скорость: %.2f км/ч\n"+
-			"Сожгли калорий: %.2f\n",
-			slay[1], duration.Hours(), float64(distance(step, height)), avgSpeed, callories), nil
+		calories, err = WalkingSpentCalories(step, weight, height, duration)
 	default:
 		return "", errors.New("неизвестный тип тренировки")
 	}
-
+	if err != nil {
+		return "", err
+	}
+	report := fmt.Sprintf(
+		"Тип тренировки: %s\n"+
+			"Длительность: %.2f ч.\n"+
+			"Дистанция: %.2f км.\n"+
+			"Скорость: %.2f км/ч\n"+
+			"Сожгли калорий: %.2f\n",
+		types, duration.Hours(), float64(distance(step, height)), avgSpeed, callories
+	)
+	return report, nil
 }
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
