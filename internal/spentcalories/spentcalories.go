@@ -55,7 +55,7 @@ func meanSpeed(steps int, height float64, duration time.Duration) float64 {
 }
 
 func TrainingInfo(data string, weight, height float64) (string, error) {
-	var callories float64
+	var calories float64
 	
 	slay := strings.Split(data, ",")
 	if len(slay) != 3 {
@@ -84,7 +84,7 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 			"Дистанция: %.2f км.\n"+
 			"Скорость: %.2f км/ч\n"+
 			"Сожгли калорий: %.2f\n",
-		types, duration.Hours(), float64(distance(step, height)), avgSpeed, callories)
+		types, duration.Hours(), float64(distance(step, height)), avgSpeed, calories)
 	return report, nil
 }
 
