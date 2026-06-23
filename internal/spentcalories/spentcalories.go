@@ -55,7 +55,8 @@ func meanSpeed(steps int, height float64, duration time.Duration) float64 {
 }
 
 func TrainingInfo(data string, weight, height float64) (string, error) {
-
+	var calories float64
+	
 	slay := strings.Split(data, ",")
 	if len(slay) != 3 {
 		return "", errors.New("incorrect count of slay")
@@ -65,7 +66,7 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 		log.Println(err)
 	}
 	avgSpeed := meanSpeed(step, height, duration)
-
+	
 	switch types {
 	case "Бег":
 		calories, err = RunningSpentCalories(step, weight, height, duration)
