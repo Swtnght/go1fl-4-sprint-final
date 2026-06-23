@@ -55,7 +55,7 @@ func meanSpeed(steps int, height float64, duration time.Duration) float64 {
 }
 
 func TrainingInfo(data string, weight, height float64) (string, error) {
-	var calories float64
+	var callories float64
 	
 	slay := strings.Split(data, ",")
 	if len(slay) != 3 {
